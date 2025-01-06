@@ -1,0 +1,2026 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[     84873,       2018]
+NotebookOptionsPosition[     82919,       1980]
+NotebookOutlinePosition[     83349,       1997]
+CellTagsIndexPosition[     83306,       1994]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{"PARTE", " ", "1"}], ":", 
+    RowBox[{"Importar", " ", 
+     RowBox[{"r102", ".", "txt"}]}]}], "*)"}], 
+  RowBox[{
+   RowBox[{
+    RowBox[{
+    "data", "=", 
+     "\"\<https://people.idsia.ch/~luca/macs-vrptw/problems/r102.txt\>\""}], 
+    ";"}], "\n", 
+   RowBox[{
+    RowBox[{"datos", "=", 
+     RowBox[{"Import", "[", 
+      RowBox[{"data", ",", "\"\<Table\>\""}], "]"}]}], ";"}], "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"coord", "=", 
+      RowBox[{"datos", "[", 
+       RowBox[{"[", 
+        RowBox[{
+         RowBox[{"10", ";;"}], ",", 
+         RowBox[{"2", ";;", "3"}]}], "]"}], "]"}]}], ";"}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"coord", "=", 
+     RowBox[{"datos", "[", 
+      RowBox[{"[", 
+       RowBox[{
+        RowBox[{"10", ";;", "20"}], ",", 
+        RowBox[{"2", ";;", "3"}]}], "]"}], "]"}]}], ";"}], " ", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{
+     "SOLO", " ", "LOS", " ", "PRIMEROS", " ", "15", " ", "CLIENTES"}], "+", 
+     "DEP\[CapitalOAcute]SITO"}], "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"n", "=", 
+     RowBox[{"Length", "[", "coord", "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"vehDisponibles", "=", 
+     RowBox[{"datos", "[", 
+      RowBox[{"[", 
+       RowBox[{"5", ",", "1"}], "]"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"cap", "=", 
+     RowBox[{"datos", "[", 
+      RowBox[{"[", 
+       RowBox[{"5", ",", "2"}], "]"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"base", "=", 
+     RowBox[{"coord", "[", 
+      RowBox[{"[", "1", "]"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"coordC", "=", 
+     RowBox[{"coord", "[", 
+      RowBox[{"[", 
+       RowBox[{"2", ";;"}], "]"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"demanda", "=", 
+     RowBox[{"datos", "[", 
+      RowBox[{"[", 
+       RowBox[{
+        RowBox[{"10", ";;", "20"}], ",", "4"}], "]"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"ventanas", "=", 
+     RowBox[{"datos", "[", 
+      RowBox[{"[", 
+       RowBox[{
+        RowBox[{"10", ";;", "20"}], ",", 
+        RowBox[{"5", ";;", "6"}]}], "]"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"tservicio", "=", 
+     RowBox[{"datos", "[", 
+      RowBox[{"[", 
+       RowBox[{
+        RowBox[{"10", ";;", "20"}], ",", 
+        RowBox[{"-", "1"}]}], "]"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"tiemposDeViaje", "=", 
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{"N", "[", 
+        RowBox[{"EuclideanDistance", "[", 
+         RowBox[{
+          RowBox[{"coord", "[", 
+           RowBox[{"[", "i", "]"}], "]"}], ",", 
+          RowBox[{"coord", "[", 
+           RowBox[{"[", "j", "]"}], "]"}]}], "]"}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"i", ",", "n"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"j", ",", "n"}], "}"}]}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"distanceMatrix", "=", "tiemposDeViaje"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"vehicleCapacity", "=", "cap"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"depotNode", "=", "1"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"demands", "=", "demanda"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"serviceTimes", "=", "tservicio"}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"timeWindows", "=", 
+     RowBox[{"datos", "[", 
+      RowBox[{"[", 
+       RowBox[{
+        RowBox[{"10", ";;", "20"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"5", ",", "6"}], "}"}]}], "]"}], "]"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"speed", "=", "10"}], ";"}], "\n", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Inicializaci\[OAcute]n", " ", "de", " ", "rutas", " ", "con", " ", 
+     "clientes", " ", "semilla"}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Funci\[OAcute]n", " ", "para", " ", "calcular", " ", "el", " ", "Convex",
+      " ", "Hull"}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"ConvexHull", "[", "pts_", "]"}], ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"hull", "=", 
+          RowBox[{"{", "}"}]}], ",", "leftmost", ",", "current", ",", "next", 
+         ",", "temp", ",", "nextIndex"}], "}"}], ",", 
+       RowBox[{
+        RowBox[{"leftmost", "=", 
+         RowBox[{"First", "[", 
+          RowBox[{"Ordering", "[", 
+           RowBox[{"pts", ",", "1", ",", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"#1", "[", 
+               RowBox[{"[", "1", "]"}], "]"}], "<", 
+              RowBox[{"#2", "[", 
+               RowBox[{"[", "1", "]"}], "]"}]}], "&"}]}], "]"}], "]"}]}], ";",
+         "\[IndentingNewLine]", 
+        RowBox[{"current", "=", "leftmost"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"AppendTo", "[", 
+         RowBox[{"hull", ",", "current"}], "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"While", "[", 
+         RowBox[{"True", ",", 
+          RowBox[{
+           RowBox[{"temp", "=", 
+            RowBox[{"DeleteCases", "[", 
+             RowBox[{
+              RowBox[{"Range", "[", 
+               RowBox[{"Length", "[", "pts", "]"}], "]"}], ",", "current"}], 
+             "]"}]}], ";", "\[IndentingNewLine]", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"temp", "==", 
+              RowBox[{"{", "}"}]}], ",", 
+             RowBox[{"Break", "[", "]"}]}], "]"}], ";", "\[IndentingNewLine]", 
+           RowBox[{"nextIndex", "=", 
+            RowBox[{"temp", "[", 
+             RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+           RowBox[{"Do", "[", 
+            RowBox[{
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"VectorAngle", "[", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"pts", "[", 
+                    RowBox[{"[", "current", "]"}], "]"}], "->", 
+                   RowBox[{"pts", "[", 
+                    RowBox[{"[", "nextIndex", "]"}], "]"}]}], ",", 
+                  RowBox[{
+                   RowBox[{"pts", "[", 
+                    RowBox[{"[", "current", "]"}], "]"}], "->", 
+                   RowBox[{"pts", "[", 
+                    RowBox[{"[", "p", "]"}], "]"}]}]}], "]"}], ">", "0"}], 
+               ",", 
+               RowBox[{
+                RowBox[{"nextIndex", "=", "p"}], ";"}]}], "]"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"p", ",", "temp"}], "}"}]}], "]"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"next", "=", 
+            RowBox[{"pts", "[", 
+             RowBox[{"[", "nextIndex", "]"}], "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"nextIndex", "==", "leftmost"}], ",", 
+             RowBox[{"Break", "[", "]"}]}], "]"}], ";", "\[IndentingNewLine]", 
+           RowBox[{"AppendTo", "[", 
+            RowBox[{"hull", ",", "nextIndex"}], "]"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"current", "=", "nextIndex"}], ";"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", "hull"}]}], "]"}]}], ";"}], "\n", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Funci\[OAcute]n", " ", "para", " ", "inicializar", " ", "rutas"}], 
+    "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"InitializeRoutes", "[", 
+      RowBox[{"coord_", ",", "depot_", ",", "nSeeds_"}], "]"}], ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"lch", ",", "lcr", ",", 
+         RowBox[{"seeds", "=", 
+          RowBox[{"{", "}"}]}], ",", "distances", ",", "i", ",", "lchIndices",
+          ",", "lcrIndices"}], "}"}], ",", 
+       RowBox[{"(*", 
+        RowBox[{"Calcular", " ", "LCH"}], "*)"}], 
+       RowBox[{
+        RowBox[{"lchIndices", "=", 
+         RowBox[{"ConvexHull", "[", 
+          RowBox[{"coord", "[", 
+           RowBox[{"[", 
+            RowBox[{"2", ";;"}], "]"}], "]"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"lch", "=", 
+         RowBox[{"coord", "[", 
+          RowBox[{"[", 
+           RowBox[{"1", "+", "lchIndices"}], "]"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{"Calcular", " ", "LCR"}], "*)"}], 
+        RowBox[{"lcrIndices", "=", 
+         RowBox[{"Complement", "[", 
+          RowBox[{
+           RowBox[{"Range", "[", 
+            RowBox[{"Length", "[", 
+             RowBox[{"coord", "[", 
+              RowBox[{"[", 
+               RowBox[{"2", ";;"}], "]"}], "]"}], "]"}], "]"}], ",", 
+           "lchIndices"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"lcr", "=", 
+         RowBox[{"coord", "[", 
+          RowBox[{"[", 
+           RowBox[{"1", "+", "lcrIndices"}], "]"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"lcr", "=", 
+         RowBox[{"SortBy", "[", 
+          RowBox[{"lcr", ",", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"ventanas", "[", 
+              RowBox[{"[", 
+               RowBox[{
+                RowBox[{"#", "+", "1"}], ",", "1"}], "]"}], "]"}], "-", 
+             RowBox[{"tiemposDeViaje", "[", 
+              RowBox[{"[", 
+               RowBox[{"1", ",", 
+                RowBox[{"#", "+", "1"}]}], "]"}], "]"}]}], "&"}]}], "]"}]}], 
+        ";", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{
+         "Seleccionar", " ", "el", " ", "primer", " ", "cliente", " ", 
+          "semilla", " ", 
+          RowBox[{"(", 
+           RowBox[{
+           "m\[AAcute]s", " ", "lejano", " ", "del", " ", 
+            "dep\[OAcute]sito"}], ")"}]}], "*)"}], 
+        RowBox[{"AppendTo", "[", 
+         RowBox[{"seeds", ",", 
+          RowBox[{"1", "+", 
+           RowBox[{"First", "[", 
+            RowBox[{"Ordering", "[", 
+             RowBox[{
+              RowBox[{"tiemposDeViaje", "[", 
+               RowBox[{"[", 
+                RowBox[{"1", ",", 
+                 RowBox[{"2", ";;"}]}], "]"}], "]"}], ",", 
+              RowBox[{"-", "1"}]}], "]"}], "]"}]}]}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{
+         "Seleccionar", " ", "los", " ", "clientes", " ", "semilla", " ", 
+          "restantes"}], "*)"}], 
+        RowBox[{"Do", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"distances", "=", 
+            RowBox[{"Table", "[", 
+             RowBox[{
+              RowBox[{"Min", "[", 
+               RowBox[{"Table", "[", 
+                RowBox[{
+                 RowBox[{"EuclideanDistance", "[", 
+                  RowBox[{
+                   RowBox[{"coord", "[", 
+                    RowBox[{"[", "c", "]"}], "]"}], ",", 
+                   RowBox[{"coord", "[", 
+                    RowBox[{"[", "s", "]"}], "]"}]}], "]"}], ",", 
+                 RowBox[{"{", 
+                  RowBox[{"s", ",", "seeds"}], "}"}]}], "]"}], "]"}], ",", 
+              RowBox[{"{", 
+               RowBox[{"c", ",", "lchIndices"}], "}"}]}], "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"AppendTo", "[", 
+            RowBox[{"seeds", ",", 
+             RowBox[{"lchIndices", "[", 
+              RowBox[{"[", 
+               RowBox[{"First", "[", 
+                RowBox[{"Ordering", "[", 
+                 RowBox[{"distances", ",", 
+                  RowBox[{"-", "1"}]}], "]"}], "]"}], "]"}], "]"}]}], "]"}], 
+           ";", "\[IndentingNewLine]", 
+           RowBox[{"lchIndices", "=", 
+            RowBox[{"DeleteCases", "[", 
+             RowBox[{"lchIndices", ",", 
+              RowBox[{"Last", "[", "seeds", "]"}]}], "]"}]}], ";"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"i", ",", "2", ",", "nSeeds"}], "}"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"{", 
+         RowBox[{"lcrIndices", ",", 
+          RowBox[{"Table", "[", 
+           RowBox[{
+            RowBox[{"Join", "[", 
+             RowBox[{
+              RowBox[{"{", "depot", "}"}], ",", 
+              RowBox[{"{", "s", "}"}], ",", 
+              RowBox[{"{", "depot", "}"}]}], "]"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"s", ",", "seeds"}], "}"}]}], "]"}]}], "}"}]}]}], 
+      "]"}]}], ";"}], "\[IndentingNewLine]", "\n", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Fin", " ", "de", " ", "Inicializaci\[OAcute]n", " ", "de", " ", "rutas", 
+     " ", "con", " ", "clientes", " ", "semilla"}], "*)"}], 
+   "\[IndentingNewLine]", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"2.2", " ", "C\[AAcute]lculo", " ", "de", " ", 
+     RowBox[{"Tiempo", "/", "Factibilidad"}], " ", "en", " ", "una", " ", 
+     "ruta"}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"RouteCostAndFeasibility", "[", 
+      RowBox[{
+      "ruta_", ",", "distanceMat_", ",", "twList_", ",", "demands_", ",", 
+       "vehCap_", ",", "depot_", ",", "speed_", ",", 
+       RowBox[{"serviceTime_", ":", "0"}]}], "]"}], ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"distTotal", "=", "0."}], ",", 
+         RowBox[{"arrivalTime", "=", "0."}], ",", 
+         RowBox[{"feasible", "=", "True"}], ",", 
+         RowBox[{"arrivalTimes", "=", 
+          RowBox[{"{", "}"}]}], ",", 
+         RowBox[{"departureTimes", "=", 
+          RowBox[{"{", "}"}]}], ",", 
+         RowBox[{"capacity", "=", "vehCap"}], ",", "currentTime"}], "}"}], 
+       ",", 
+       RowBox[{"(*", 
+        RowBox[{
+        "Inicializar", " ", "tiempos", " ", "de", " ", "llegada", " ", "y", 
+         " ", "salida", " ", "en", " ", "el", " ", "dep\[OAcute]sito"}], 
+        "*)"}], 
+       RowBox[{
+        RowBox[{"AppendTo", "[", 
+         RowBox[{"arrivalTimes", ",", 
+          RowBox[{"twList", "[", 
+           RowBox[{"[", 
+            RowBox[{"depot", ",", "1"}], "]"}], "]"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"AppendTo", "[", 
+         RowBox[{"departureTimes", ",", 
+          RowBox[{"twList", "[", 
+           RowBox[{"[", 
+            RowBox[{"depot", ",", "1"}], "]"}], "]"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"currentTime", "=", 
+         RowBox[{"twList", "[", 
+          RowBox[{"[", 
+           RowBox[{"depot", ",", "1"}], "]"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Do", "[", 
+         RowBox[{
+          RowBox[{"Module", "[", 
+           RowBox[{
+            RowBox[{"{", 
+             RowBox[{
+              RowBox[{"origen", "=", 
+               RowBox[{"ruta", "[", 
+                RowBox[{"[", "i", "]"}], "]"}]}], ",", 
+              RowBox[{"destino", "=", 
+               RowBox[{"ruta", "[", 
+                RowBox[{"[", 
+                 RowBox[{"i", "+", "1"}], "]"}], "]"}]}]}], "}"}], ",", 
+            RowBox[{"(*", 
+             RowBox[{
+             "Verificar", " ", "factibilidad", " ", "de", " ", "la", " ", 
+              "ruta"}], "*)"}], 
+            RowBox[{
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"destino", "<", "1"}], "||", 
+                RowBox[{"destino", ">", 
+                 RowBox[{"Length", "[", "twList", "]"}]}]}], ",", 
+               RowBox[{
+                RowBox[{"feasible", "=", "False"}], ";", 
+                "\[IndentingNewLine]", 
+                RowBox[{"Return", "[", 
+                 RowBox[{
+                  RowBox[{"{", 
+                   RowBox[{
+                   "distTotal", ",", "feasible", ",", "arrivalTimes", ",", 
+                    "departureTimes"}], "}"}], ",", "Module"}], "]"}], 
+                ";"}]}], "]"}], ";", "\[IndentingNewLine]", 
+             RowBox[{"(*", 
+              RowBox[{
+              "Actualizar", " ", "distancia", " ", "total", " ", "y", " ", 
+               "tiempo", " ", "de", " ", "llegada"}], "*)"}], 
+             RowBox[{"distTotal", "+=", 
+              RowBox[{"distanceMat", "[", 
+               RowBox[{"[", 
+                RowBox[{"origen", ",", "destino"}], "]"}], "]"}]}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"arrivalTime", "=", 
+              RowBox[{"currentTime", "+", 
+               RowBox[{
+                RowBox[{"distanceMat", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"origen", ",", "destino"}], "]"}], "]"}], "/", 
+                "speed"}]}]}], ";", "\[IndentingNewLine]", 
+             RowBox[{"(*", 
+              RowBox[{"Respetar", " ", "ventana", " ", "de", " ", "tiempo"}], 
+              "*)"}], 
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{"arrivalTime", "<", 
+                RowBox[{"twList", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"destino", ",", "1"}], "]"}], "]"}]}], ",", 
+               RowBox[{
+                RowBox[{"arrivalTime", "=", 
+                 RowBox[{"twList", "[", 
+                  RowBox[{"[", 
+                   RowBox[{"destino", ",", "1"}], "]"}], "]"}]}], ";"}]}], 
+              "]"}], ";", "\[IndentingNewLine]", 
+             RowBox[{"(*", 
+              RowBox[{
+              "Verificar", " ", "si", " ", "se", " ", "excede", " ", "la", 
+               " ", "ventana", " ", "de", " ", "tiempo"}], "*)"}], 
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{"arrivalTime", ">", 
+                RowBox[{"twList", "[", 
+                 RowBox[{"[", 
+                  RowBox[{"destino", ",", "2"}], "]"}], "]"}]}], ",", 
+               RowBox[{
+                RowBox[{"feasible", "=", "False"}], ";"}]}], "]"}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"(*", 
+              RowBox[{
+              "Actualizar", " ", "tiempo", " ", "de", " ", "salida", " ", "y",
+                " ", "capacidad"}], "*)"}], 
+             RowBox[{"currentTime", "=", 
+              RowBox[{"arrivalTime", "+", "serviceTime"}]}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"AppendTo", "[", 
+              RowBox[{"arrivalTimes", ",", "arrivalTime"}], "]"}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"AppendTo", "[", 
+              RowBox[{"departureTimes", ",", "currentTime"}], "]"}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"(*", 
+              RowBox[{
+              "Actualizar", " ", "capacidad", " ", "si", " ", "no", " ", "es",
+                " ", "el", " ", "dep\[OAcute]sito"}], "*)"}], 
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{"destino", "!=", "depot"}], ",", 
+               RowBox[{
+                RowBox[{"capacity", "-=", 
+                 RowBox[{"demands", "[", 
+                  RowBox[{"[", "destino", "]"}], "]"}]}], ";", 
+                "\[IndentingNewLine]", 
+                RowBox[{"If", "[", 
+                 RowBox[{
+                  RowBox[{"capacity", "<", "0"}], ",", 
+                  RowBox[{
+                   RowBox[{"feasible", "=", "False"}], ";"}]}], "]"}], 
+                ";"}]}], "]"}], ";"}]}], "]"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"i", ",", "1", ",", 
+            RowBox[{
+             RowBox[{"Length", "[", "ruta", "]"}], "-", "1"}]}], "}"}]}], 
+         "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"{", 
+         RowBox[{
+         "distTotal", ",", "feasible", ",", "arrivalTimes", ",", 
+          "departureTimes"}], "}"}]}]}], "]"}]}], ";"}], "\n", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "2.3", " ", "Costo", " ", "de", " ", "toda", " ", "la", " ", 
+     "soluci\[OAcute]n", " ", 
+     RowBox[{"(", 
+      RowBox[{"m\[UAcute]ltiples", " ", "rutas"}], ")"}]}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"SolutionCostVRPTW", "[", 
+      RowBox[{
+      "solution_", ",", "distanceMat_", ",", "twList_", ",", "demands_", ",", 
+       "vehCap_", ",", "depot_", ",", "speed_"}], "]"}], ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"totalDist", "=", "0."}], ",", 
+         RowBox[{"feasible", "=", "True"}], ",", "rc"}], "}"}], ",", 
+       RowBox[{
+        RowBox[{"Do", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"rc", "=", 
+            RowBox[{"RouteCostAndFeasibility", "[", 
+             RowBox[{
+             "ruta", ",", "distanceMat", ",", "twList", ",", "demands", ",", 
+              "vehCap", ",", "depot", ",", "speed"}], "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"totalDist", "+=", 
+            RowBox[{"rc", "[", 
+             RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"rc", "[", 
+               RowBox[{"[", "2", "]"}], "]"}], "===", "False"}], ",", 
+             RowBox[{
+              RowBox[{"feasible", "=", "False"}], ";"}]}], "]"}], ";"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"ruta", ",", "solution"}], "}"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{"feasible", ",", "totalDist", ",", "Infinity"}], "]"}]}]}], 
+      "]"}]}], ";"}], "\n", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "2.4", " ", "Inserci\[OAcute]n", " ", "Greedy", " ", "con", " ", 
+     "Capacidad", " ", "y", " ", "Ventanas"}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Funci\[OAcute]n", " ", "para", " ", "calcular", " ", "la", " ", 
+     "capacidad", " ", "usada", " ", "en", " ", "una", " ", "ruta"}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"CapacityUsed", "[", 
+      RowBox[{"ruta_", ",", "demands_"}], "]"}], ":=", 
+     RowBox[{"Total", "[", 
+      RowBox[{"demands", "[", 
+       RowBox[{"[", "ruta", "]"}], "]"}], "]"}]}], ";"}], "\n", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"Funci\[OAcute]n", " ", "para", " ", "actualizar", " ", "l_t"}], 
+     ",", 
+     RowBox[{"MAC", " ", "y", " ", "MDC"}]}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"UpdateRouteProperties", "[", 
+      RowBox[{
+      "ruta_", ",", "arrivalTimes_", ",", "departureTimes_", ",", "demands_", 
+       ",", "twList_", ",", "depot_", ",", "vehCap_"}], "]"}], ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"lt", ",", "mac", ",", "mdc", ",", 
+         RowBox[{"n", "=", 
+          RowBox[{"Length", "[", "ruta", "]"}]}], ",", "capacity"}], "}"}], 
+       ",", 
+       RowBox[{
+        RowBox[{"lt", "=", 
+         RowBox[{"ConstantArray", "[", 
+          RowBox[{"0", ",", "n"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"mac", "=", 
+         RowBox[{"ConstantArray", "[", 
+          RowBox[{"0", ",", "n"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"mdc", "=", 
+         RowBox[{"ConstantArray", "[", 
+          RowBox[{"0", ",", "n"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{"Inicializar", " ", "capacidad"}], "*)"}], 
+        RowBox[{"capacity", "=", "vehCap"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{"Actualizar", " ", "lt", " ", 
+          RowBox[{"(", 
+           RowBox[{
+           "\[UAcute]ltimo", " ", "tiempo", " ", "de", " ", "llegada", " ", 
+            "posible"}], ")"}]}], "*)"}], 
+        RowBox[{
+         RowBox[{"lt", "[", 
+          RowBox[{"[", 
+           RowBox[{"-", "1"}], "]"}], "]"}], "=", 
+         RowBox[{"twList", "[", 
+          RowBox[{"[", 
+           RowBox[{
+            RowBox[{"ruta", "[", 
+             RowBox[{"[", 
+              RowBox[{"-", "1"}], "]"}], "]"}], ",", "2"}], "]"}], "]"}]}], 
+        ";", "\[IndentingNewLine]", 
+        RowBox[{"Do", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{
+            RowBox[{"lt", "[", 
+             RowBox[{"[", "i", "]"}], "]"}], "=", 
+            RowBox[{"Min", "[", 
+             RowBox[{
+              RowBox[{"twList", "[", 
+               RowBox[{"[", 
+                RowBox[{
+                 RowBox[{"ruta", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}], ",", "2"}], "]"}], "]"}], 
+              ",", 
+              RowBox[{
+               RowBox[{"lt", "[", 
+                RowBox[{"[", 
+                 RowBox[{"i", "+", "1"}], "]"}], "]"}], "-", 
+               RowBox[{
+                RowBox[{"distanceMatrix", "[", 
+                 RowBox[{"[", 
+                  RowBox[{
+                   RowBox[{"ruta", "[", 
+                    RowBox[{"[", "i", "]"}], "]"}], ",", 
+                   RowBox[{"ruta", "[", 
+                    RowBox[{"[", 
+                    RowBox[{"i", "+", "1"}], "]"}], "]"}]}], "]"}], "]"}], 
+                "/", "speed"}], "-", 
+               RowBox[{"serviceTimes", "[", 
+                RowBox[{"[", 
+                 RowBox[{"ruta", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}], "]"}], "]"}]}]}], "]"}]}], 
+           ";"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"i", ",", 
+            RowBox[{"n", "-", "2"}], ",", "1", ",", 
+            RowBox[{"-", "1"}]}], "}"}]}], "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{"Actualizar", " ", "MAC", " ", "y", " ", "MDC"}], "*)"}], 
+        RowBox[{"Do", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"ruta", "[", 
+               RowBox[{"[", "i", "]"}], "]"}], "!=", "depot"}], ",", 
+             RowBox[{
+              RowBox[{"capacity", "-=", 
+               RowBox[{"demands", "[", 
+                RowBox[{"[", 
+                 RowBox[{"ruta", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}], "]"}], "]"}]}], ";"}]}], 
+            "]"}], ";", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"mac", "[", 
+             RowBox[{"[", "i", "]"}], "]"}], "=", "capacity"}], ";"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"i", ",", "1", ",", "n"}], "}"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"capacity", "=", "0"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"Do", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"ruta", "[", 
+               RowBox[{"[", "i", "]"}], "]"}], "!=", "depot"}], ",", 
+             RowBox[{
+              RowBox[{"capacity", "+=", 
+               RowBox[{"demands", "[", 
+                RowBox[{"[", 
+                 RowBox[{"ruta", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}], "]"}], "]"}]}], ";"}]}], 
+            "]"}], ";", "\[IndentingNewLine]", 
+           RowBox[{
+            RowBox[{"mdc", "[", 
+             RowBox[{"[", "i", "]"}], "]"}], "=", "capacity"}], ";"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"i", ",", "n", ",", "1", ",", 
+            RowBox[{"-", "1"}]}], "}"}]}], "]"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"{", 
+         RowBox[{"lt", ",", "mac", ",", "mdc"}], "}"}]}]}], "]"}]}], ";"}], 
+   "\n", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Funci\[OAcute]n", " ", "para", " ", "calcular", " ", "el", " ", "costo", 
+     " ", "de", " ", "penalizaci\[OAcute]n"}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"PenaltyCost", "[", 
+      RowBox[{
+      "solution_", ",", "cliente_", ",", "distanceMat_", ",", "demands_", ",",
+        "twList_", ",", "vehCap_", ",", "depot_", ",", "speed_"}], "]"}], ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"bestCost", "=", "Infinity"}], ",", 
+         RowBox[{"secondBestCost", "=", "Infinity"}], ",", "ruta", ",", 
+         "newRuta", ",", "i", ",", "tempSol", ",", "costTemp"}], "}"}], ",", 
+       RowBox[{
+        RowBox[{"Do", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"ruta", "=", 
+            RowBox[{"solution", "[", 
+             RowBox[{"[", "r", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{"CapacityUsed", "[", 
+                RowBox[{
+                 RowBox[{"DeleteCases", "[", 
+                  RowBox[{"ruta", ",", "depot"}], "]"}], ",", "demands"}], 
+                "]"}], "+", 
+               RowBox[{"demands", "[", 
+                RowBox[{"[", "cliente", "]"}], "]"}]}], "<=", "vehCap"}], ",", 
+             RowBox[{
+              RowBox[{"For", "[", 
+               RowBox[{
+                RowBox[{"i", "=", "2"}], ",", 
+                RowBox[{"i", "<=", 
+                 RowBox[{"Length", "[", "ruta", "]"}]}], ",", 
+                RowBox[{"i", "++"}], ",", 
+                RowBox[{
+                 RowBox[{"newRuta", "=", 
+                  RowBox[{"Insert", "[", 
+                   RowBox[{"ruta", ",", "cliente", ",", "i"}], "]"}]}], ";", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"tempSol", "=", 
+                  RowBox[{"ReplacePart", "[", 
+                   RowBox[{"solution", ",", 
+                    RowBox[{"r", "->", "newRuta"}]}], "]"}]}], ";", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"costTemp", "=", 
+                  RowBox[{"SolutionCostVRPTW", "[", 
+                   RowBox[{
+                   "tempSol", ",", "distanceMat", ",", "twList", ",", 
+                    "demands", ",", "vehCap", ",", "depot", ",", "speed"}], 
+                   "]"}]}], ";", "\[IndentingNewLine]", 
+                 RowBox[{"If", "[", 
+                  RowBox[{
+                   RowBox[{"costTemp", "<", "bestCost"}], ",", 
+                   RowBox[{
+                    RowBox[{"secondBestCost", "=", "bestCost"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"bestCost", "=", "costTemp"}], ";"}], ",", 
+                   RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"costTemp", "<", "secondBestCost"}], ",", 
+                    RowBox[{
+                    RowBox[{"secondBestCost", "=", "costTemp"}], ";"}]}], 
+                    "]"}], ";"}]}], "]"}], ";"}]}], "]"}], ";"}]}], "]"}], 
+           ";"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"r", ",", "1", ",", 
+            RowBox[{"Length", "[", "solution", "]"}]}], "}"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"secondBestCost", "==", "Infinity"}], ",", "0", ",", 
+          RowBox[{"secondBestCost", "-", "bestCost"}]}], "]"}]}]}], "]"}]}], 
+    ";"}], "\n", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"InsertClientBestPosition", "[", 
+      RowBox[{
+      "solution_", ",", "cliente_", ",", "distanceMat_", ",", "demands_", ",",
+        "twList_", ",", "vehCap_", ",", "depotNode_", ",", "speed_"}], "]"}], 
+     ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"bestSol", "=", "solution"}], ",", 
+         RowBox[{"bestCost", "=", "Infinity"}], ",", 
+         RowBox[{"inserted", "=", "False"}], ",", "ruta", ",", "newRuta", ",",
+          "i", ",", "tempSol", ",", "costTemp", ",", "lt", ",", "mac", ",", 
+         "mdc", ",", "arrivalTimes", ",", "departureTimes", ",", "feasible"}],
+         "}"}], ",", 
+       RowBox[{"(*", 
+        RowBox[{
+        "Iterar", " ", "sobre", " ", "cada", " ", "ruta", " ", "en", " ", 
+         "la", " ", "soluci\[OAcute]n"}], "*)"}], 
+       RowBox[{
+        RowBox[{"Do", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"ruta", "=", 
+            RowBox[{"solution", "[", 
+             RowBox[{"[", "r", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+           RowBox[{"(*", 
+            RowBox[{
+            "Chequeo", " ", "de", " ", "capacidad", " ", "actual", " ", "de", 
+             " ", "la", " ", "ruta"}], "*)"}], 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{"CapacityUsed", "[", 
+                RowBox[{
+                 RowBox[{"DeleteCases", "[", 
+                  RowBox[{"ruta", ",", "depotNode"}], "]"}], ",", "demands"}],
+                 "]"}], "+", 
+               RowBox[{"demands", "[", 
+                RowBox[{"[", "cliente", "]"}], "]"}]}], "<=", "vehCap"}], ",", 
+             RowBox[{"(*", 
+              RowBox[{
+               RowBox[{
+               "Probamos", " ", "insertar", " ", "el", " ", "cliente", " ", 
+                "en", " ", "todas", " ", "las", " ", "posiciones", " ", 
+                "posibles", " ", "de", " ", "la", " ", "ruta"}], ",", 
+               RowBox[{
+               "excepto", " ", "no", " ", "partir", " ", "ni", " ", 
+                "terminar", " ", "sin", " ", "el", " ", "depot"}]}], "*)"}], 
+             RowBox[{
+              RowBox[{"For", "[", 
+               RowBox[{
+                RowBox[{"i", "=", "2"}], ",", 
+                RowBox[{"i", "<=", 
+                 RowBox[{"Length", "[", "ruta", "]"}]}], ",", 
+                RowBox[{"i", "++"}], ",", 
+                RowBox[{
+                 RowBox[{"newRuta", "=", 
+                  RowBox[{"Insert", "[", 
+                   RowBox[{"ruta", ",", "cliente", ",", "i"}], "]"}]}], ";", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"(*", 
+                  RowBox[{
+                  "Calcular", " ", "tiempos", " ", "de", " ", "llegada", " ", 
+                   "y", " ", "salida", " ", "para", " ", "la", " ", "nueva", 
+                   " ", "ruta"}], "*)"}], 
+                 RowBox[{
+                  RowBox[{"{", 
+                   RowBox[{
+                   "_", ",", "feasible", ",", "arrivalTimes", ",", 
+                    "departureTimes"}], "}"}], "=", 
+                  RowBox[{"RouteCostAndFeasibility", "[", 
+                   RowBox[{
+                   "newRuta", ",", "distanceMat", ",", "twList", ",", 
+                    "demands", ",", "vehCap", ",", "depotNode", ",", "speed", 
+                    ",", 
+                    RowBox[{"serviceTimes", "[", 
+                    RowBox[{"[", "cliente", "]"}], "]"}]}], "]"}]}], ";", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"(*", 
+                  RowBox[{
+                   RowBox[{"Actualizar", " ", "lt"}], ",", 
+                   RowBox[{
+                   "MAC", " ", "y", " ", "MDC", " ", "para", " ", "la", " ", 
+                    "nueva", " ", "ruta", " ", "si", " ", "es", " ", 
+                    "factible"}]}], "*)"}], 
+                 RowBox[{"If", "[", 
+                  RowBox[{"feasible", ",", 
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{"lt", ",", "mac", ",", "mdc"}], "}"}], "=", 
+                    RowBox[{"UpdateRouteProperties", "[", 
+                    RowBox[{
+                    "newRuta", ",", "arrivalTimes", ",", "departureTimes", 
+                    ",", "demands", ",", "twList", ",", "depotNode", ",", 
+                    "vehCap"}], "]"}]}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"(*", 
+                    RowBox[{
+                    "Crear", " ", "una", " ", "soluci\[OAcute]n", " ", 
+                    "temporal", " ", "con", " ", "la", " ", "nueva", " ", 
+                    "ruta"}], "*)"}], 
+                    RowBox[{"tempSol", "=", 
+                    RowBox[{"ReplacePart", "[", 
+                    RowBox[{"solution", ",", 
+                    RowBox[{"r", "->", "newRuta"}]}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"(*", 
+                    RowBox[{
+                    "Calcular", " ", "el", " ", "costo", " ", "de", " ", "la",
+                     " ", "soluci\[OAcute]n", " ", "temporal"}], "*)"}], 
+                    RowBox[{"costTemp", "=", 
+                    RowBox[{"SolutionCostVRPTW", "[", 
+                    RowBox[{
+                    "tempSol", ",", "distanceMat", ",", "twList", ",", 
+                    "demands", ",", "vehCap", ",", "depotNode", ",", 
+                    "speed"}], "]"}]}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"(*", 
+                    RowBox[{
+                    RowBox[{
+                    "Si", " ", "el", " ", "costo", " ", "es", " ", "mejor", 
+                    " ", "que", " ", "el", " ", "mejor", " ", "costo", " ", 
+                    "encontrado", " ", "hasta", " ", "ahora"}], ",", 
+                    RowBox[{
+                    "actualizar", " ", "la", " ", "mejor", " ", 
+                    "soluci\[OAcute]n", " ", "y", " ", "costo"}]}], "*)"}], 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"costTemp", "<", "bestCost"}], ",", 
+                    RowBox[{
+                    RowBox[{"bestCost", "=", "costTemp"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"bestSol", "=", "tempSol"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"inserted", "=", "True"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"(*", 
+                    RowBox[{
+                    "Imprimir", " ", "detalles", " ", "de", " ", "la", " ", 
+                    "inserci\[OAcute]n"}], "*)"}], 
+                    RowBox[{"Print", "[", 
+                    RowBox[{
+                    "\"\<Cliente \>\"", ",", "cliente", ",", 
+                    "\"\< insertado en ruta \>\"", ",", "r", ",", 
+                    "\"\< posici\[OAcute]n \>\"", ",", "i", ",", 
+                    "\"\< con nuevo costo \>\"", ",", "bestCost"}], "]"}], 
+                    ";"}]}], "]"}], ";"}]}], "]"}], ";"}]}], "]"}], ";"}]}], 
+            "]"}], ";"}], ",", 
+          RowBox[{"{", 
+           RowBox[{"r", ",", "1", ",", 
+            RowBox[{"Length", "[", "solution", "]"}]}], "}"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{
+         "Retornar", " ", "la", " ", "mejor", " ", "soluci\[OAcute]n", " ", 
+          "encontrada", " ", "y", " ", "si", " ", "se", " ", 
+          "insert\[OAcute]", " ", "el", " ", "cliente"}], "*)"}], 
+        RowBox[{"{", 
+         RowBox[{"bestSol", ",", "inserted"}], "}"}]}]}], "]"}]}], ";"}], 
+   "\n", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "2.5", " ", "Heur\[IAcute]stica", " ", "de", " ", "Construcci\[OAcute]n", 
+     " ", 
+     RowBox[{"(", 
+      RowBox[{"Greedy", "+", 
+       RowBox[{"M\[UAcute]ltiples", " ", "Rutas"}]}], ")"}]}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"ConstructSolutionVRPTW", "[", 
+      RowBox[{
+      "distanceMat_", ",", "demands_", ",", "twList_", ",", "depot_", ",", 
+       "vehCap_", ",", "speed_", ",", "nSeeds_"}], "]"}], ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"sol", "=", 
+          RowBox[{"{", "}"}]}], ",", "notAssigned", ",", "cl", ",", 
+         "attemptSol", ",", "insertedQ", ",", "newRoute", ",", "rc", ",", 
+         "lcr", ",", "initialRoutes", ",", "penaltyCosts", ",", 
+         "sortedClients", ",", "allAssigned"}], "}"}], ",", 
+       RowBox[{"(*", 
+        RowBox[{
+        "Inicializar", " ", "rutas", " ", "con", " ", "clientes", " ", 
+         "semilla"}], "*)"}], 
+       RowBox[{
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"lcr", ",", "initialRoutes"}], "}"}], "=", 
+         RowBox[{"InitializeRoutes", "[", 
+          RowBox[{"coord", ",", "depot", ",", "nSeeds"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Print", "[", 
+         RowBox[{"\"\<Clientes semilla: \>\"", ",", "initialRoutes"}], "]"}], 
+        ";", "\[IndentingNewLine]", 
+        RowBox[{"notAssigned", "=", "lcr"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"sol", "=", "initialRoutes"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"allAssigned", "=", "False"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"While", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"notAssigned", "!=", 
+            RowBox[{"{", "}"}]}], "&&", 
+           RowBox[{"!", "allAssigned"}]}], ",", 
+          RowBox[{"(*", 
+           RowBox[{
+           "Calcular", " ", "costos", " ", "de", " ", "penalizaci\[OAcute]n", 
+            " ", "para", " ", "los", " ", "clientes", " ", "no", " ", 
+            "asignados"}], "*)"}], 
+          RowBox[{
+           RowBox[{"penaltyCosts", "=", 
+            RowBox[{"Table", "[", 
+             RowBox[{
+              RowBox[{"PenaltyCost", "[", 
+               RowBox[{
+               "sol", ",", "cl", ",", "distanceMat", ",", "demands", ",", 
+                "twList", ",", "vehCap", ",", "depot", ",", "speed"}], "]"}], 
+              ",", 
+              RowBox[{"{", 
+               RowBox[{"cl", ",", "notAssigned"}], "}"}]}], "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"(*", 
+            RowBox[{
+            "Ordenar", " ", "clientes", " ", "no", " ", "asignados", " ", 
+             "basado", " ", "en", " ", "el", " ", "costo", " ", "de", " ", 
+             "penalizaci\[OAcute]n", " ", "en", " ", "orden", " ", 
+             "descendente"}], "*)"}], 
+           RowBox[{"sortedClients", "=", 
+            RowBox[{"notAssigned", "[", 
+             RowBox[{"[", 
+              RowBox[{"Ordering", "[", 
+               RowBox[{"penaltyCosts", ",", "All", ",", "Greater"}], "]"}], 
+              "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+           RowBox[{"(*", 
+            RowBox[{
+            "Imprimir", " ", "informaci\[OAcute]n", " ", "para", " ", 
+             "depuraci\[OAcute]n"}], "*)"}], 
+           RowBox[{"Print", "[", 
+            RowBox[{"\"\<Clientes no asignados: \>\"", ",", "notAssigned"}], 
+            "]"}], ";", "\[IndentingNewLine]", 
+           RowBox[{"Print", "[", 
+            RowBox[{
+            "\"\<Costos de penalizaci\[OAcute]n: \>\"", ",", "penaltyCosts"}],
+             "]"}], ";", "\[IndentingNewLine]", 
+           RowBox[{"Print", "[", 
+            RowBox[{
+            "\"\<Clientes ordenados por penalizaci\[OAcute]n: \>\"", ",", 
+             "sortedClients"}], "]"}], ";", "\[IndentingNewLine]", 
+           RowBox[{"(*", 
+            RowBox[{
+            "Intentar", " ", "insertar", " ", "clientes", " ", "en", " ", 
+             "orden", " ", "de", " ", "mayor", " ", "a", " ", "menor", " ", 
+             "costo", " ", "de", " ", "penalizaci\[OAcute]n"}], "*)"}], 
+           RowBox[{"allAssigned", "=", "True"}], ";", "\[IndentingNewLine]", 
+           RowBox[{"Do", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"cl", "=", 
+               RowBox[{"sortedClients", "[", 
+                RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+              RowBox[{"(*", 
+               RowBox[{
+               "Tomar", " ", "el", " ", "cliente", " ", "con", " ", "mayor", 
+                " ", "penalizaci\[OAcute]n"}], "*)"}], 
+              RowBox[{"Print", "[", 
+               RowBox[{"\"\<Intentando insertar cliente: \>\"", ",", "cl"}], 
+               "]"}], ";", "\[IndentingNewLine]", 
+              RowBox[{"(*", 
+               RowBox[{
+               "Intentar", " ", "insertar", " ", "el", " ", "cliente", " ", 
+                "en", " ", "las", " ", "rutas", " ", "existentes"}], "*)"}], 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{"attemptSol", ",", "insertedQ"}], "}"}], "=", 
+               RowBox[{"InsertClientBestPosition", "[", 
+                RowBox[{
+                "sol", ",", "cl", ",", "distanceMat", ",", "demands", ",", 
+                 "twList", ",", "vehCap", ",", "depot", ",", "speed"}], 
+                "]"}]}], ";", "\[IndentingNewLine]", 
+              RowBox[{"If", "[", 
+               RowBox[{"insertedQ", ",", 
+                RowBox[{"(*", 
+                 RowBox[{
+                 "Se", " ", "insert\[OAcute]", " ", "en", " ", "una", " ", 
+                  "ruta", " ", "existente"}], "*)"}], 
+                RowBox[{
+                 RowBox[{"sol", "=", "attemptSol"}], ";", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"notAssigned", "=", 
+                  RowBox[{"DeleteCases", "[", 
+                   RowBox[{"notAssigned", ",", "cl"}], "]"}]}], ";", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"Print", "[", 
+                  RowBox[{
+                  "\"\<Cliente \>\"", ",", "cl", ",", 
+                   "\"\< insertado en una ruta existente.\>\""}], "]"}], 
+                 ";"}], ",", 
+                RowBox[{"(*", 
+                 RowBox[{
+                  RowBox[{"No", " ", "cupo", " ", "en", " ", "ninguna"}], "=", 
+                  RowBox[{">", 
+                   RowBox[{
+                   "intentar", " ", "abrir", " ", "una", " ", "nueva", " ", 
+                    "ruta"}]}]}], "*)"}], 
+                RowBox[{
+                 RowBox[{"newRoute", "=", 
+                  RowBox[{"{", 
+                   RowBox[{"depot", ",", "cl", ",", "depot"}], "}"}]}], ";", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"rc", "=", 
+                  RowBox[{"RouteCostAndFeasibility", "[", 
+                   RowBox[{
+                   "newRoute", ",", "distanceMat", ",", "twList", ",", 
+                    "demands", ",", "vehCap", ",", "depot", ",", "speed"}], 
+                   "]"}]}], ";", "\[IndentingNewLine]", 
+                 RowBox[{"If", "[", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"rc", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "==", "True"}], ",", 
+                   RowBox[{
+                    RowBox[{"AppendTo", "[", 
+                    RowBox[{"sol", ",", "newRoute"}], "]"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"notAssigned", "=", 
+                    RowBox[{"DeleteCases", "[", 
+                    RowBox[{"notAssigned", ",", "cl"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Print", "[", 
+                    RowBox[{
+                    "\"\<Cliente \>\"", ",", "cl", ",", 
+                    "\"\< asignado a una nueva ruta.\>\""}], "]"}], ";"}], 
+                   ",", 
+                   RowBox[{"(*", 
+                    RowBox[{
+                    RowBox[{"Si", " ", "no", " ", "es", " ", "factible"}], 
+                    ",", 
+                    RowBox[{"no", " ", "se", " ", "puede", " ", "asignar"}]}],
+                     "*)"}], 
+                   RowBox[{
+                    RowBox[{"Print", "[", 
+                    RowBox[{
+                    "\"\<Cliente \>\"", ",", "cl", ",", 
+                    "\"\< no puede ser asignado a una nueva ruta.\>\""}], 
+                    "]"}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"allAssigned", "=", "False"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"(*", 
+                    RowBox[{
+                    "Remover", " ", "de", " ", "notAssigned", " ", "solo", 
+                    " ", "si", " ", "no", " ", "se", " ", "pudo", " ", 
+                    "asignar", " ", "a", " ", "ninguna", " ", "ruta"}], 
+                    "*)"}], 
+                    RowBox[{"notAssigned", "=", 
+                    RowBox[{"DeleteCases", "[", 
+                    RowBox[{"notAssigned", ",", "cl"}], "]"}]}], ";"}]}], 
+                  "]"}], ";"}]}], "]"}], ";"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"Length", "[", "sortedClients", "]"}], "}"}]}], "]"}], 
+           ";", "\[IndentingNewLine]", 
+           RowBox[{"(*", 
+            RowBox[{
+            "Condici\[OAcute]n", " ", "de", " ", "salida", " ", "si", " ", 
+             "no", " ", "se", " ", "pudo", " ", "asignar", " ", 
+             "ning\[UAcute]n", " ", "cliente", " ", "en", " ", "una", " ", 
+             "iteraci\[OAcute]n"}], "*)"}], 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{"Length", "[", "sortedClients", "]"}], "==", 
+               RowBox[{"Length", "[", "notAssigned", "]"}]}], "&&", 
+              RowBox[{"!", "insertedQ"}]}], ",", 
+             RowBox[{
+              RowBox[{
+              "Print", "[", 
+               "\"\<Ning\[UAcute]n cliente pudo ser asignado en esta iteraci\
+\[OAcute]n. Saliendo del bucle.\>\"", "]"}], ";", "\[IndentingNewLine]", 
+              RowBox[{"allAssigned", "=", "True"}], ";"}]}], "]"}], ";"}]}], 
+         "]"}], ";", "\[IndentingNewLine]", "sol"}]}], "]"}]}], ";"}], "\n", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"2.6", " ", "B\[UAcute]squeda", " ", 
+     RowBox[{"Local", ":", 
+      RowBox[{"ejemplos", " ", "sencillos"}]}]}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"TwoOptIntraRoute", "[", 
+      RowBox[{
+      "ruta_", ",", "distanceMat_", ",", "twList_", ",", "demands_", ",", 
+       "vehCap_", ",", "depot_", ",", "speed_"}], "]"}], ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"bestRoute", "=", "ruta"}], ",", "bestCost", ",", "newRoute",
+          ",", "i", ",", "j", ",", "feasible"}], "}"}], ",", 
+       RowBox[{
+        RowBox[{"bestCost", "=", 
+         RowBox[{
+          RowBox[{"RouteCostAndFeasibility", "[", 
+           RowBox[{
+           "ruta", ",", "distanceMat", ",", "twList", ",", "demands", ",", 
+            "vehCap", ",", "depot", ",", "speed"}], "]"}], "[", 
+          RowBox[{"[", "1", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+        RowBox[{"For", "[", 
+         RowBox[{
+          RowBox[{"i", "=", "2"}], ",", 
+          RowBox[{"i", "<", 
+           RowBox[{
+            RowBox[{"Length", "[", "ruta", "]"}], "-", "2"}]}], ",", 
+          RowBox[{"i", "++"}], ",", 
+          RowBox[{
+           RowBox[{"For", "[", 
+            RowBox[{
+             RowBox[{"j", "=", 
+              RowBox[{"i", "+", "1"}]}], ",", 
+             RowBox[{"j", "<", 
+              RowBox[{
+               RowBox[{"Length", "[", "ruta", "]"}], "-", "1"}]}], ",", 
+             RowBox[{"j", "++"}], ",", 
+             RowBox[{
+              RowBox[{"newRoute", "=", 
+               RowBox[{"Join", "[", 
+                RowBox[{
+                 RowBox[{"ruta", "[", 
+                  RowBox[{"[", 
+                   RowBox[{"1", ";;", 
+                    RowBox[{"i", "-", "1"}]}], "]"}], "]"}], ",", 
+                 RowBox[{"Reverse", "[", 
+                  RowBox[{"ruta", "[", 
+                   RowBox[{"[", 
+                    RowBox[{"i", ";;", "j"}], "]"}], "]"}], "]"}], ",", 
+                 RowBox[{"ruta", "[", 
+                  RowBox[{"[", 
+                   RowBox[{
+                    RowBox[{"j", "+", "1"}], ";;"}], "]"}], "]"}]}], "]"}]}], 
+              ";", "\[IndentingNewLine]", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{"_", ",", "feasible", ",", "_", ",", "_"}], "}"}], 
+               "=", 
+               RowBox[{"RouteCostAndFeasibility", "[", 
+                RowBox[{
+                "newRoute", ",", "distanceMat", ",", "twList", ",", "demands",
+                  ",", "vehCap", ",", "depot", ",", "speed"}], "]"}]}], ";", 
+              "\[IndentingNewLine]", 
+              RowBox[{"If", "[", 
+               RowBox[{"feasible", ",", 
+                RowBox[{
+                 RowBox[{"Module", "[", 
+                  RowBox[{
+                   RowBox[{"{", 
+                    RowBox[{"c", "=", 
+                    RowBox[{"RouteCostAndFeasibility", "[", 
+                    RowBox[{
+                    "newRoute", ",", "distanceMat", ",", "twList", ",", 
+                    "demands", ",", "vehCap", ",", "depot", ",", "speed"}], 
+                    "]"}]}], "}"}], ",", 
+                   RowBox[{
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"c", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], "&&", 
+                    RowBox[{
+                    RowBox[{"c", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], "<", "bestCost"}]}], ",", 
+                    RowBox[{
+                    RowBox[{"bestCost", "=", 
+                    RowBox[{"c", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"bestRoute", "=", "newRoute"}], ";"}]}], "]"}], 
+                    ";"}]}], "]"}], ";"}]}], "]"}], ";"}]}], "]"}], ";"}]}], 
+         "]"}], ";", "\[IndentingNewLine]", "bestRoute"}]}], "]"}]}], ";"}], 
+   "\n", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"MoveOneClientBetweenRoutes", "[", 
+      RowBox[{
+      "sol_", ",", "distanceMat_", ",", "twList_", ",", "demands_", ",", 
+       "vehCap_", ",", "depotNode_", ",", "speed_"}], "]"}], ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"bestSol", "=", "sol"}], ",", "bestCost", ",", "costSol", 
+         ",", "i", ",", "j", ",", "r1", ",", "r2", ",", "route1", ",", 
+         "route2", ",", "newRoute1", ",", "newRoute2", ",", "client", ",", 
+         "k", ",", "pos", ",", "feasible"}], "}"}], ",", 
+       RowBox[{
+        RowBox[{"bestCost", "=", 
+         RowBox[{"SolutionCostVRPTW", "[", 
+          RowBox[{
+          "sol", ",", "distanceMat", ",", "twList", ",", "demands", ",", 
+           "vehCap", ",", "depotNode", ",", "speed"}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"(*", 
+         RowBox[{"Recorremos", " ", "pares", " ", "de", " ", "rutas"}], 
+         "*)"}], 
+        RowBox[{"For", "[", 
+         RowBox[{
+          RowBox[{"r1", "=", "1"}], ",", 
+          RowBox[{"r1", "<=", 
+           RowBox[{"Length", "[", "sol", "]"}]}], ",", 
+          RowBox[{"r1", "++"}], ",", 
+          RowBox[{
+           RowBox[{"For", "[", 
+            RowBox[{
+             RowBox[{"r2", "=", "1"}], ",", 
+             RowBox[{"r2", "<=", 
+              RowBox[{"Length", "[", "sol", "]"}]}], ",", 
+             RowBox[{"r2", "++"}], ",", 
+             RowBox[{
+              RowBox[{"If", "[", 
+               RowBox[{
+                RowBox[{"r1", "!=", "r2"}], ",", 
+                RowBox[{
+                 RowBox[{"route1", "=", 
+                  RowBox[{"sol", "[", 
+                   RowBox[{"[", "r1", "]"}], "]"}]}], ";", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"route2", "=", 
+                  RowBox[{"sol", "[", 
+                   RowBox[{"[", "r2", "]"}], "]"}]}], ";", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"(*", 
+                  RowBox[{
+                  "Recorremos", " ", "clientes", " ", "en", " ", "route1", 
+                   " ", 
+                   RowBox[{"(", 
+                    RowBox[{"excepto", " ", "el", " ", "depot"}], ")"}]}], 
+                  "*)"}], 
+                 RowBox[{"For", "[", 
+                  RowBox[{
+                   RowBox[{"k", "=", "2"}], ",", 
+                   RowBox[{"k", "<=", 
+                    RowBox[{
+                    RowBox[{"Length", "[", "route1", "]"}], "-", "1"}]}], ",", 
+                   RowBox[{"k", "++"}], ",", 
+                   RowBox[{
+                    RowBox[{"client", "=", 
+                    RowBox[{"route1", "[", 
+                    RowBox[{"[", "k", "]"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"(*", 
+                    RowBox[{
+                    "Chequear", " ", "si", " ", "capacity", " ", "route2", 
+                    " ", "lo", " ", "tolera"}], "*)"}], 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"CapacityUsed", "[", 
+                    RowBox[{
+                    RowBox[{"DeleteCases", "[", 
+                    RowBox[{"route2", ",", "depotNode"}], "]"}], ",", 
+                    "demands"}], "]"}], "+", 
+                    RowBox[{"demands", "[", 
+                    RowBox[{"[", "client", "]"}], "]"}]}], "<=", "vehCap"}], 
+                    ",", 
+                    RowBox[{"(*", 
+                    RowBox[{
+                    "Probamos", " ", "quitar", " ", "client", " ", "de", " ", 
+                    "route1", " ", "e", " ", "insertarlo", " ", "en", " ", 
+                    "route2", " ", "en", " ", "distintas", " ", 
+                    "posiciones"}], "*)"}], 
+                    RowBox[{
+                    RowBox[{"For", "[", 
+                    RowBox[{
+                    RowBox[{"pos", "=", "2"}], ",", 
+                    RowBox[{"pos", "<", 
+                    RowBox[{"Length", "[", "route2", "]"}]}], ",", 
+                    RowBox[{"pos", "++"}], ",", 
+                    RowBox[{
+                    RowBox[{"newRoute1", "=", 
+                    RowBox[{"Delete", "[", 
+                    RowBox[{"route1", ",", "k"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"newRoute2", "=", 
+                    RowBox[{"Insert", "[", 
+                    RowBox[{"route2", ",", "client", ",", "pos"}], "]"}]}], 
+                    ";", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{"_", ",", "feasible", ",", "_", ",", "_"}], "}"}],
+                     "=", 
+                    RowBox[{"RouteCostAndFeasibility", "[", 
+                    RowBox[{
+                    "newRoute2", ",", "distanceMat", ",", "twList", ",", 
+                    "demands", ",", "vehCap", ",", "depotNode", ",", 
+                    "speed"}], "]"}]}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{"feasible", ",", 
+                    RowBox[{
+                    RowBox[{"Module", "[", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"tempSol", "=", 
+                    RowBox[{"ReplacePart", "[", 
+                    RowBox[{"sol", ",", 
+                    RowBox[{"{", 
+                    RowBox[{
+                    RowBox[{"r1", "->", "newRoute1"}], ",", 
+                    RowBox[{"r2", "->", "newRoute2"}]}], "}"}]}], "]"}]}], 
+                    ",", "costTemp"}], "}"}], ",", 
+                    RowBox[{
+                    RowBox[{"costTemp", "=", 
+                    RowBox[{"SolutionCostVRPTW", "[", 
+                    RowBox[{
+                    "tempSol", ",", "distanceMat", ",", "twList", ",", 
+                    "demands", ",", "vehCap", ",", "depotNode", ",", 
+                    "speed"}], "]"}]}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"costTemp", "<", "bestCost"}], ",", 
+                    RowBox[{
+                    RowBox[{"bestCost", "=", "costTemp"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"bestSol", "=", "tempSol"}], ";"}]}], "]"}], 
+                    ";"}]}], "]"}], ";"}]}], "]"}], ";"}]}], "]"}], ";"}]}], 
+                    "]"}], ";"}]}], "]"}], ";"}]}], "]"}], ";"}]}], "]"}], 
+           ";"}]}], "]"}], ";", "\[IndentingNewLine]", "bestSol"}]}], "]"}]}],
+     ";"}], "\n", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"2.7", " ", "B\[UAcute]squeda", " ", "Local", " ", "Compuesta"}], 
+    "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"LocalSearchVRPTW", "[", 
+      RowBox[{
+      "sol_", ",", "distanceMat_", ",", "twList_", ",", "demands_", ",", 
+       "vehCap_", ",", "depotNode_", ",", "speed_"}], "]"}], ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"improvedSol", "=", "sol"}], ",", "newSol", ",", 
+         RowBox[{"changed", "=", "True"}]}], "}"}], ",", 
+       RowBox[{
+        RowBox[{"While", "[", 
+         RowBox[{"changed", ",", 
+          RowBox[{
+           RowBox[{"changed", "=", "False"}], ";", "\[IndentingNewLine]", 
+           RowBox[{"(*", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"1", ")"}], " ", "Intra"}], "-", 
+             RowBox[{"ruta", " ", "2"}], "-", 
+             RowBox[{"opt", " ", "en", " ", "cada", " ", "ruta"}]}], "*)"}], 
+           RowBox[{"Do", "[", 
+            RowBox[{
+             RowBox[{"Module", "[", 
+              RowBox[{
+               RowBox[{"{", 
+                RowBox[{
+                 RowBox[{"r0", "=", 
+                  RowBox[{"improvedSol", "[", 
+                   RowBox[{"[", "r", "]"}], "]"}]}], ",", "rOpt"}], "}"}], 
+               ",", 
+               RowBox[{
+                RowBox[{"rOpt", "=", 
+                 RowBox[{"TwoOptIntraRoute", "[", 
+                  RowBox[{
+                  "r0", ",", "distanceMat", ",", "twList", ",", "demands", 
+                   ",", "vehCap", ",", "depotNode", ",", "speed"}], "]"}]}], 
+                ";", "\[IndentingNewLine]", 
+                RowBox[{"If", "[", 
+                 RowBox[{
+                  RowBox[{"rOpt", "!=", "r0"}], ",", 
+                  RowBox[{
+                   RowBox[{"improvedSol", "=", 
+                    RowBox[{"ReplacePart", "[", 
+                    RowBox[{"improvedSol", ",", 
+                    RowBox[{"r", "->", "rOpt"}]}], "]"}]}], ";", 
+                   "\[IndentingNewLine]", 
+                   RowBox[{"changed", "=", "True"}], ";"}]}], "]"}], ";"}]}], 
+              "]"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"r", ",", "1", ",", 
+               RowBox[{"Length", "[", "improvedSol", "]"}]}], "}"}]}], "]"}], 
+           ";", "\[IndentingNewLine]", 
+           RowBox[{"(*", 
+            RowBox[{
+             RowBox[{"2", ")"}], " ", "Mover", " ", "clientes", " ", "entre", 
+             " ", "rutas"}], "*)"}], 
+           RowBox[{"newSol", "=", 
+            RowBox[{"MoveOneClientBetweenRoutes", "[", 
+             RowBox[{
+             "improvedSol", ",", "distanceMat", ",", "twList", ",", "demands",
+               ",", "vehCap", ",", "depotNode", ",", "speed"}], "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"newSol", "!=", "improvedSol"}], ",", 
+             RowBox[{
+              RowBox[{"improvedSol", "=", "newSol"}], ";", 
+              "\[IndentingNewLine]", 
+              RowBox[{"changed", "=", "True"}], ";"}]}], "]"}], ";"}]}], 
+         "]"}], ";", "\[IndentingNewLine]", "improvedSol"}]}], "]"}]}], ";"}],
+    "\n", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+    "Procedimiento", " ", "de", " ", "Eliminaci\[OAcute]n", " ", "de", " ", 
+     "Rutas"}], "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"EliminateRoutes", "[", 
+      RowBox[{
+      "sol_", ",", "distanceMat_", ",", "twList_", ",", "demands_", ",", 
+       "vehCap_", ",", "depot_", ",", "speed_"}], "]"}], ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"newSol", "=", "sol"}], ",", "routes", ",", "candidate", ",",
+          "client", ",", "otherRoute", ",", "tempSol", ",", "feasible", ",", 
+         "bestRoute", ",", "bestCost", ",", "currentCost", ",", "removed", 
+         ",", "attempt"}], "}"}], ",", 
+       RowBox[{
+        RowBox[{"removed", "=", "True"}], ";", "\[IndentingNewLine]", 
+        RowBox[{"While", "[", 
+         RowBox[{"removed", ",", 
+          RowBox[{
+           RowBox[{"routes", "=", 
+            RowBox[{"Length", "[", "newSol", "]"}]}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"removed", "=", "False"}], ";", "\[IndentingNewLine]", 
+           RowBox[{"(*", 
+            RowBox[{"Identificar", " ", "rutas", " ", "candidatas"}], "*)"}], 
+           RowBox[{"candidate", "=", 
+            RowBox[{"-", "1"}]}], ";", "\[IndentingNewLine]", 
+           RowBox[{"Do", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"If", "[", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"Length", "[", 
+                  RowBox[{"newSol", "[", 
+                   RowBox[{"[", "r", "]"}], "]"}], "]"}], "==", "3"}], ",", 
+                RowBox[{
+                 RowBox[{"candidate", "=", "r"}], ";", "\[IndentingNewLine]", 
+                 RowBox[{"Break", "[", "]"}], ";"}]}], "]"}], ";"}], ",", 
+             RowBox[{"{", 
+              RowBox[{"r", ",", "routes"}], "}"}]}], "]"}], ";", 
+           "\[IndentingNewLine]", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{"candidate", "!=", 
+              RowBox[{"-", "1"}]}], ",", 
+             RowBox[{
+              RowBox[{"Print", "[", 
+               RowBox[{"\"\<Intentando eliminar ruta: \>\"", ",", 
+                RowBox[{"newSol", "[", 
+                 RowBox[{"[", "candidate", "]"}], "]"}]}], "]"}], ";", 
+              "\[IndentingNewLine]", 
+              RowBox[{"(*", 
+               RowBox[{"Eliminar", " ", "la", " ", "ruta", " ", "candidata"}],
+                "*)"}], 
+              RowBox[{"tempSol", "=", "newSol"}], ";", "\[IndentingNewLine]", 
+              RowBox[{"newSol", "=", 
+               RowBox[{"Delete", "[", 
+                RowBox[{"newSol", ",", "candidate"}], "]"}]}], ";", 
+              "\[IndentingNewLine]", 
+              RowBox[{"(*", 
+               RowBox[{
+               "Intentar", " ", "reasignar", " ", "clientes", " ", "de", " ", 
+                "la", " ", "ruta", " ", "candidata"}], "*)"}], 
+              RowBox[{"Do", "[", 
+               RowBox[{
+                RowBox[{
+                 RowBox[{"client", "=", 
+                  RowBox[{
+                   RowBox[{"tempSol", "[", 
+                    RowBox[{"[", "candidate", "]"}], "]"}], "[", 
+                   RowBox[{"[", "c", "]"}], "]"}]}], ";", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"attempt", "=", "False"}], ";", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"bestRoute", "=", 
+                  RowBox[{"-", "1"}]}], ";", "\[IndentingNewLine]", 
+                 RowBox[{"bestCost", "=", "Infinity"}], ";", 
+                 "\[IndentingNewLine]", 
+                 RowBox[{"Print", "[", 
+                  RowBox[{
+                  "\"\<Intentando reasignar cliente: \>\"", ",", "client"}], 
+                  "]"}], ";", "\[IndentingNewLine]", 
+                 RowBox[{"Do", "[", 
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"otherRoute", "=", 
+                    RowBox[{"newSol", "[", 
+                    RowBox[{"[", "or", "]"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"CapacityUsed", "[", 
+                    RowBox[{
+                    RowBox[{"DeleteCases", "[", 
+                    RowBox[{"otherRoute", ",", "depotNode"}], "]"}], ",", 
+                    "demands"}], "]"}], "+", 
+                    RowBox[{"demands", "[", 
+                    RowBox[{"[", "client", "]"}], "]"}]}], "<=", "vehCap"}], 
+                    ",", 
+                    RowBox[{"(*", 
+                    RowBox[{
+                    "Probar", " ", "insertar", " ", "el", " ", "cliente", " ",
+                     "en", " ", "la", " ", "otra", " ", "ruta"}], "*)"}], 
+                    RowBox[{
+                    RowBox[{"Do", "[", 
+                    RowBox[{
+                    RowBox[{
+                    RowBox[{"tempRoute", "=", 
+                    RowBox[{"Insert", "[", 
+                    RowBox[{"otherRoute", ",", "client", ",", "i"}], "]"}]}], 
+                    ";", "\[IndentingNewLine]", 
+                    RowBox[{
+                    RowBox[{"{", 
+                    RowBox[{"_", ",", "feasible", ",", "_", ",", "_"}], "}"}],
+                     "=", 
+                    RowBox[{"RouteCostAndFeasibility", "[", 
+                    RowBox[{
+                    "tempRoute", ",", "distanceMat", ",", "twList", ",", 
+                    "demands", ",", "vehCap", ",", "depot", ",", "speed"}], 
+                    "]"}]}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{"feasible", ",", 
+                    RowBox[{
+                    RowBox[{"currentCost", "=", 
+                    RowBox[{"SolutionCostVRPTW", "[", 
+                    RowBox[{
+                    RowBox[{"ReplacePart", "[", 
+                    RowBox[{"newSol", ",", 
+                    RowBox[{"or", "->", "tempRoute"}]}], "]"}], ",", 
+                    "distanceMat", ",", "twList", ",", "demands", ",", 
+                    "vehCap", ",", "depot", ",", "speed"}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"currentCost", "<", "bestCost"}], ",", 
+                    RowBox[{
+                    RowBox[{"bestCost", "=", "currentCost"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"bestRoute", "=", "or"}], ";"}]}], "]"}], ";"}]}],
+                     "]"}], ";"}], ",", 
+                    RowBox[{"{", 
+                    RowBox[{"i", ",", "2", ",", 
+                    RowBox[{"Length", "[", "otherRoute", "]"}]}], "}"}]}], 
+                    "]"}], ";", "\[IndentingNewLine]", 
+                    RowBox[{"If", "[", 
+                    RowBox[{
+                    RowBox[{"bestRoute", "!=", 
+                    RowBox[{"-", "1"}]}], ",", 
+                    RowBox[{
+                    RowBox[{"attempt", "=", "True"}], ";"}]}], "]"}], ";"}]}],
+                     "]"}], ";"}], ",", 
+                   RowBox[{"{", 
+                    RowBox[{"or", ",", 
+                    RowBox[{"Length", "[", "newSol", "]"}]}], "}"}]}], "]"}], 
+                 ";", "\[IndentingNewLine]", 
+                 RowBox[{"(*", 
+                  RowBox[{
+                   RowBox[{
+                   "Si", " ", "se", " ", "encontr\[OAcute]", " ", "una", " ", 
+                    "ruta", " ", "para", " ", "insertar", " ", "el", " ", 
+                    "cliente"}], ",", 
+                   RowBox[{
+                   "actualizar", " ", "la", " ", "soluci\[OAcute]n"}]}], 
+                  "*)"}], 
+                 RowBox[{"If", "[", 
+                  RowBox[{"attempt", ",", 
+                   RowBox[{
+                    RowBox[{"newSol", "=", 
+                    RowBox[{"ReplacePart", "[", 
+                    RowBox[{"newSol", ",", 
+                    RowBox[{"bestRoute", "->", 
+                    RowBox[{"Insert", "[", 
+                    RowBox[{
+                    RowBox[{"newSol", "[", 
+                    RowBox[{"[", "bestRoute", "]"}], "]"}], ",", "client", 
+                    ",", "2"}], "]"}]}]}], "]"}]}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"removed", "=", "True"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Print", "[", 
+                    RowBox[{
+                    "\"\<Cliente \>\"", ",", "client", ",", 
+                    "\"\< reasignado a ruta \>\"", ",", "bestRoute"}], "]"}], 
+                    ";"}], ",", 
+                   RowBox[{
+                    RowBox[{"Print", "[", 
+                    RowBox[{
+                    "\"\<Cliente \>\"", ",", "client", ",", 
+                    "\"\< no pudo ser reasignado.\>\""}], "]"}], ";", 
+                    "\[IndentingNewLine]", 
+                    RowBox[{"Return", "[", "tempSol", "]"}], ";"}]}], " ", 
+                  RowBox[{"(*", 
+                   RowBox[{
+                    RowBox[{
+                    "Si", " ", "no", " ", "se", " ", "puede", " ", 
+                    "reasignar", " ", "algun", " ", "cliente"}], ",", 
+                    RowBox[{"no", " ", "se", " ", "elimina"}]}], "*)"}], 
+                  "]"}], ";"}], ",", 
+                RowBox[{"{", 
+                 RowBox[{"c", ",", "2", ",", 
+                  RowBox[{
+                   RowBox[{"Length", "[", 
+                    RowBox[{"tempSol", "[", 
+                    RowBox[{"[", "candidate", "]"}], "]"}], "]"}], "-", 
+                   "1"}]}], "}"}]}], "]"}], ";"}]}], "]"}], ";"}]}], "]"}], 
+        ";", "\[IndentingNewLine]", "newSol"}]}], "]"}]}], ";"}], "\n", 
+   "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"4", ")"}], " ", "Fase", " ", "GRASP"}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"GRASPVRPTW", "[", 
+      RowBox[{
+      "distanceMat_", ",", "demands_", ",", "twList_", ",", "depot_", ",", 
+       "vehCap_", ",", "speed_", ",", "maxIter_", ",", "nSeeds_"}], "]"}], ":=", 
+     RowBox[{"Module", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"bestSol", ",", 
+         RowBox[{"bestCost", "=", "Infinity"}], ",", "iter", ",", "solConstr",
+          ",", "solLocal", ",", "costLocal", ",", "solEliminate"}], "}"}], 
+       ",", 
+       RowBox[{
+        RowBox[{"Monitor", "[", 
+         RowBox[{
+          RowBox[{"Do", "[", 
+           RowBox[{"(*", 
+            RowBox[{"Construcci\[OAcute]n", " ", 
+             RowBox[{"random", "/", "greedy"}], " ", "con", " ", 
+             "inicializaci\[OAcute]n", " ", "de", " ", "clientes", " ", 
+             "semilla"}], "*)"}], 
+           RowBox[{
+            RowBox[{
+             RowBox[{"solConstr", "=", 
+              RowBox[{"ConstructSolutionVRPTW", "[", 
+               RowBox[{
+               "distanceMat", ",", "demands", ",", "twList", ",", "depot", 
+                ",", "vehCap", ",", "speed", ",", "nSeeds"}], "]"}]}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"Print", "[", 
+              RowBox[{
+              "\"\<Soluci\[OAcute]n construida en iteraci\[OAcute]n \>\"", 
+               ",", "iter", ",", "\"\<: \>\"", ",", "solConstr"}], "]"}], ";",
+              "\[IndentingNewLine]", 
+             RowBox[{"(*", 
+              RowBox[{"Eliminaci\[OAcute]n", " ", "de", " ", "rutas"}], 
+              "*)"}], 
+             RowBox[{"solEliminate", "=", 
+              RowBox[{"EliminateRoutes", "[", 
+               RowBox[{
+               "solConstr", ",", "distanceMat", ",", "twList", ",", "demands",
+                 ",", "vehCap", ",", "depot", ",", "speed"}], "]"}]}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"Print", "[", 
+              RowBox[{
+              "\"\<Soluci\[OAcute]n despu\[EAcute]s de eliminar rutas en \
+iteracion\>\"", ",", "iter", ",", "\"\<: \>\"", ",", "solEliminate"}], "]"}], 
+             ";", "\[IndentingNewLine]", 
+             RowBox[{"(*", 
+              RowBox[{"B\[UAcute]squeda", " ", "Local"}], "*)"}], 
+             RowBox[{"solLocal", "=", 
+              RowBox[{"LocalSearchVRPTW", "[", 
+               RowBox[{
+               "solEliminate", ",", "distanceMat", ",", "twList", ",", 
+                "demands", ",", "vehCap", ",", "depot", ",", "speed"}], 
+               "]"}]}], ";", "\[IndentingNewLine]", 
+             RowBox[{"Print", "[", 
+              RowBox[{
+              "\"\<Solucion luego de busqueda local en iteracion\>\"", ",", 
+               "iter", ",", "\"\<: \>\"", ",", "solLocal"}], "]"}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"(*", 
+              RowBox[{
+              "C\[AAcute]lculo", " ", "del", " ", "costo", " ", "de", " ", 
+               "la", " ", "soluci\[OAcute]n", " ", "local"}], "*)"}], 
+             RowBox[{"costLocal", "=", 
+              RowBox[{"SolutionCostVRPTW", "[", 
+               RowBox[{
+               "solLocal", ",", "distanceMat", ",", "twList", ",", "demands", 
+                ",", "vehCap", ",", "depot", ",", "speed"}], "]"}]}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"(*", 
+              RowBox[{
+              "Actualizar", " ", "la", " ", "mejor", " ", "soluci\[OAcute]n", 
+               " ", "si", " ", "es", " ", "mejor"}], "*)"}], 
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{"costLocal", "<", "bestCost"}], ",", 
+               RowBox[{
+                RowBox[{"bestCost", "=", "costLocal"}], ";", 
+                "\[IndentingNewLine]", 
+                RowBox[{"bestSol", "=", "solLocal"}], ";"}]}], "]"}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"(*", 
+              RowBox[{
+              "Mostrar", " ", "el", " ", "progreso", " ", "en", " ", "cada", 
+               " ", "iteraci\[OAcute]n"}], "*)"}], 
+             RowBox[{"Print", "[", 
+              RowBox[{
+              "\"\<Iteraci\[OAcute]n: \>\"", ",", "iter", ",", 
+               "\"\< - Mejor costo actual: \>\"", ",", "bestCost"}], "]"}], 
+             ";"}], ",", 
+            RowBox[{"{", 
+             RowBox[{"iter", ",", "1", ",", "maxIter"}], "}"}]}], "]"}], ",", 
+          RowBox[{"ProgressIndicator", "[", 
+           RowBox[{"iter", ",", 
+            RowBox[{"{", 
+             RowBox[{"1", ",", "maxIter"}], "}"}]}], "]"}]}], "]"}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"{", 
+         RowBox[{"bestSol", ",", "bestCost"}], "}"}]}]}], "]"}]}], ";"}], 
+   "\n", "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{"Ejecuci\[OAcute]n", " ", "del", " ", "algoritmo", " ", "GRASP"}],
+     "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"nSeeds", "=", "3"}], ";"}], " ", 
+   RowBox[{"(*", 
+    RowBox[{
+    "N\[UAcute]mero", " ", "de", " ", "clientes", " ", "semilla", " ", "para",
+      " ", "inicializar", " ", "rutas"}], "*)"}], "\n", 
+   RowBox[{
+    RowBox[{"maxIter", "=", "1"}], ";"}], "\[IndentingNewLine]", 
+   "nSeeds"}]}]], "Input",
+ CellChangeTimes->{{3.94510163176985*^9, 3.945101633268593*^9}, {
+  3.945101664886017*^9, 3.9451016809570293`*^9}, {3.945101855907934*^9, 
+  3.9451018678838997`*^9}, {3.945116364483406*^9, 3.945116383504839*^9}, {
+  3.94511690599893*^9, 3.9451169407445354`*^9}, {3.9451170537841606`*^9, 
+  3.9451171183374805`*^9}, {3.945117228652462*^9, 3.9451172289466743`*^9}},
+ CellLabel->
+  "In[1184]:=",ExpressionUUID->"a1358d01-0683-3a44-94ff-d6269ead8a77"],
+
+Cell[BoxData["3"], "Output",
+ CellChangeTimes->{
+  3.945101870052099*^9, {3.945116424269909*^9, 3.945116427863085*^9}, 
+   3.9451168037199936`*^9, {3.9451171114648647`*^9, 3.945117121546896*^9}, 
+   3.9451172315776367`*^9},
+ CellLabel->
+  "Out[1219]=",ExpressionUUID->"6f69ad21-1eaa-1147-825e-938ab5e25864"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"bestSol", ",", "bestCost"}], "}"}], "=", 
+   RowBox[{"GRASPVRPTW", "[", 
+    RowBox[{
+    "distanceMatrix", ",", "demands", ",", "timeWindows", ",", "depotNode", 
+     ",", "vehicleCapacity", ",", "speed", ",", "maxIter", ",", "nSeeds"}], 
+    "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.9451016816421947`*^9, 3.9451016880081863`*^9}},
+ CellLabel->
+  "In[1220]:=",ExpressionUUID->"46a1701e-dc10-e644-a717-79bd20c99b8b"],
+
+Cell[BoxData["$Aborted"], "Output",
+ CellChangeTimes->{3.945101847185375*^9, 3.9451129237864056`*^9, 
+  3.945116942838932*^9, 3.9451172267994328`*^9, 3.945117304491596*^9},
+ CellLabel->
+  "Out[1220]=",ExpressionUUID->"8c27955e-9175-5649-b76f-35b779747768"]
+}, Open  ]],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.9451172766989384`*^9, 
+  3.9451173003516693`*^9}},ExpressionUUID->"0f724987-5446-a54c-9f30-\
+22d62ed5106c"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+   "Verificar", " ", "factibilidad", " ", "de", " ", "cada", " ", "ruta", " ",
+     "en", " ", "la", " ", "mejor", " ", "soluci\[OAcute]n"}], "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"factibilidadFinal", "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"RouteCostAndFeasibility", "[", 
+        RowBox[{
+        "#", ",", "distanceMatrix", ",", "timeWindows", ",", "demands", ",", 
+         "vehicleCapacity", ",", "depotNode", ",", "speed"}], "]"}], "&"}], "/@",
+       "bestSol"}]}], ";"}], "\n", 
+   RowBox[{
+    RowBox[{"Print", "[", 
+     RowBox[{
+     "\"\<Factibilidad de cada ruta final: \>\"", ",", "factibilidadFinal"}], 
+     "]"}], ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.9451016699564533`*^9, 3.945101690270115*^9}},
+ CellLabel->
+  "In[925]:=",ExpressionUUID->"771ec257-a116-1d43-8b0d-2240b88abb9d"],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Factibilidad de cada ruta final: \"\>", "\[InvisibleSpace]", 
+   "bestSol$56332050"}],
+  SequenceForm[
+  "Factibilidad de cada ruta final: ", $CellContext`bestSol$56332050],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.945101850245085*^9},
+ CellLabel->
+  "During evaluation of \
+In[925]:=",ExpressionUUID->"41951b5a-f8e9-9a48-8652-dc92c88be191"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["1"], "Input",
+ CellChangeTimes->{
+  3.9451016716429424`*^9, {3.945112919239565*^9, 3.945112926554001*^9}},
+ CellLabel->
+  "In[999]:=",ExpressionUUID->"b9eaed2c-1e2e-4545-aa3b-e2451bf81df1"],
+
+Cell[BoxData["1"], "Output",
+ CellChangeTimes->{3.9451129268721485`*^9},
+ CellLabel->
+  "Out[999]=",ExpressionUUID->"8f5a9426-d16f-a64a-ae69-93af58a97bb1"]
+}, Open  ]],
+
+Cell[BoxData["\[IndentingNewLine]"], "Input",
+ CellChangeTimes->{3.9451016722732563`*^9},
+ CellLabel->
+  "In[881]:=",ExpressionUUID->"80f45958-f135-784d-81a8-d369c9b278e2"],
+
+Cell[BoxData["\[IndentingNewLine]"], "Input",
+ CellChangeTimes->{3.9451016726931324`*^9},
+ CellLabel->
+  "In[882]:=",ExpressionUUID->"f140bce8-c206-fa48-9b13-af5c22b0e401"],
+
+Cell[BoxData["\[IndentingNewLine]"], "Input",
+ CellChangeTimes->{3.9451016730920677`*^9},
+ CellLabel->
+  "In[883]:=",ExpressionUUID->"1e1c5a09-00fd-164c-9c00-23e362139a93"],
+
+Cell[BoxData["\[IndentingNewLine]"], "Input",
+ CellChangeTimes->{3.9451016734770355`*^9},
+ CellLabel->
+  "In[884]:=",ExpressionUUID->"1d1f7e0e-ffe8-6c43-b219-c0c9fb53f153"],
+
+Cell[BoxData["\[IndentingNewLine]"], "Input",
+ CellChangeTimes->{3.9451016738789635`*^9},
+ CellLabel->
+  "In[885]:=",ExpressionUUID->"7f3b5e25-b18f-a642-a41f-8e28a30d6b2a"],
+
+Cell[BoxData["\[IndentingNewLine]"], "Input",
+ CellChangeTimes->{3.9451016742768955`*^9},
+ CellLabel->
+  "In[886]:=",ExpressionUUID->"4a287969-be89-314e-a5fa-57a14ce61b2b"],
+
+Cell[BoxData["\[IndentingNewLine]"], "Input",
+ CellChangeTimes->{3.945101674661867*^9},
+ CellLabel->
+  "In[887]:=",ExpressionUUID->"4fd409b3-428d-c84a-9afb-5a7017ad0c76"]
+},
+WindowSize->{441, 537},
+WindowMargins->{{Automatic, -5.25}, {Automatic, 0}},
+Magnification:>0.6 Inherited,
+FrontEndVersion->"14.1 for Microsoft Windows (64-bit) (July 16, 2024)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"86aecaaa-6dc0-7749-85df-d3477ca5a010"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[576, 22, 78116, 1829, 4112, "Input",ExpressionUUID->"a1358d01-0683-3a44-94ff-d6269ead8a77"],
+Cell[78695, 1853, 307, 6, 30, "Output",ExpressionUUID->"6f69ad21-1eaa-1147-825e-938ab5e25864"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[79039, 1864, 488, 12, 36, "Input",ExpressionUUID->"46a1701e-dc10-e644-a717-79bd20c99b8b"],
+Cell[79530, 1878, 256, 4, 30, "Output",ExpressionUUID->"8c27955e-9175-5649-b76f-35b779747768"]
+}, Open  ]],
+Cell[79801, 1885, 156, 3, 19, "Input",ExpressionUUID->"0f724987-5446-a54c-9f30-22d62ed5106c"],
+Cell[CellGroupData[{
+Cell[79982, 1892, 897, 24, 62, "Input",ExpressionUUID->"771ec257-a116-1d43-8b0d-2240b88abb9d"],
+Cell[80882, 1918, 400, 10, 16, "Print",ExpressionUUID->"41951b5a-f8e9-9a48-8652-dc92c88be191"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[81319, 1933, 203, 4, 19, "Input",ExpressionUUID->"b9eaed2c-1e2e-4545-aa3b-e2451bf81df1"],
+Cell[81525, 1939, 155, 3, 30, "Output",ExpressionUUID->"8f5a9426-d16f-a64a-ae69-93af58a97bb1"]
+}, Open  ]],
+Cell[81695, 1945, 172, 3, 28, "Input",ExpressionUUID->"80f45958-f135-784d-81a8-d369c9b278e2"],
+Cell[81870, 1950, 172, 3, 28, "Input",ExpressionUUID->"f140bce8-c206-fa48-9b13-af5c22b0e401"],
+Cell[82045, 1955, 172, 3, 28, "Input",ExpressionUUID->"1e1c5a09-00fd-164c-9c00-23e362139a93"],
+Cell[82220, 1960, 172, 3, 28, "Input",ExpressionUUID->"1d1f7e0e-ffe8-6c43-b219-c0c9fb53f153"],
+Cell[82395, 1965, 172, 3, 28, "Input",ExpressionUUID->"7f3b5e25-b18f-a642-a41f-8e28a30d6b2a"],
+Cell[82570, 1970, 172, 3, 28, "Input",ExpressionUUID->"4a287969-be89-314e-a5fa-57a14ce61b2b"],
+Cell[82745, 1975, 170, 3, 28, "Input",ExpressionUUID->"4fd409b3-428d-c84a-9afb-5a7017ad0c76"]
+}
+]
+*)
+
