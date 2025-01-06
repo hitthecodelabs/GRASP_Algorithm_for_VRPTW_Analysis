@@ -27,8 +27,7 @@ Cell[BoxData[
  CellLabel->
   "In[268]:=",ExpressionUUID->"a2cae65a-ad1b-cc47-9df1-ce7604114aec"],
 
-Cell[BoxData["\<\"C:\\\\Users\\\\J.Paul\\\\Desktop\\\\Jean\\\\hitthecodelabs_\
-repo\\\\wolfram_tsp\\\\\"\>"], "Output",
+Cell[BoxData["\<\"wolfram_tsp\\\\\"\>"], "Output",
  CellChangeTimes->{3.9450702351943703`*^9, 3.9450729962218094`*^9},
  CellLabel->
   "Out[268]=",ExpressionUUID->"c2028ff7-515b-f940-a0aa-5da8570441a8"]
@@ -47,12 +46,9 @@ Cell[BoxData[
 
 Cell[BoxData[
  RowBox[{"{", 
-  RowBox[{"\<\"C:\\\\Users\\\\J.Paul\\\\Desktop\\\\Jean\\\\hitthecodelabs_\
-repo\\\\wolfram_tsp\\\\att48.vrp\"\>", 
-   ",", "\<\"C:\\\\Users\\\\J.Paul\\\\Desktop\\\\Jean\\\\hitthecodelabs_repo\\\
-\\wolfram_tsp\\\\notebook_0.nb\"\>", 
-   ",", "\<\"C:\\\\Users\\\\J.Paul\\\\Desktop\\\\Jean\\\\hitthecodelabs_repo\\\
-\\wolfram_tsp\\\\notebook_0.txt\"\>"}], "}"}]], "Output",
+  RowBox[{"\<\"att48.vrp\"\>", 
+   ",", "\<\"notebook_0.nb\"\>", 
+   ",", "\<\"notebook_0.txt\"\>"}], "}"}]], "Output",
  CellChangeTimes->{3.945073035415682*^9},
  CellLabel->
   "Out[273]=",ExpressionUUID->"496926f1-ebc7-a540-a61c-c23daa4755a3"]
@@ -69,8 +65,7 @@ Cell[BoxData[
  CellLabel->
   "In[275]:=",ExpressionUUID->"0622afda-bc11-f848-ae58-ebade5b93577"],
 
-Cell[BoxData["\<\"C:\\\\Users\\\\J.Paul\\\\Desktop\\\\Jean\\\\hitthecodelabs_\
-repo\\\\wolfram_tsp\\\\att48.vrp\"\>"], "Output",
+Cell[BoxData["\<\"att48.vrp\"\>"], "Output",
  CellChangeTimes->{3.945073044788166*^9},
  CellLabel->
   "Out[275]=",ExpressionUUID->"88a09d8d-7776-6540-a09f-fc1af4058a2c"]
