@@ -95,4 +95,4 @@ GRASP (Greedy Randomized Adaptive Search Procedure) es una metaheurística que c
 
 ## Licencia
 
-Este proyecto está bajo la Licencia [Nombre de la licencia, por ejemplo, MIT]. Consulta el archivo `LICENSE` para más detalles.
+Este proyecto está bajo la Licencia [MIT]. Consulta el archivo `LICENSE` para más detalles.
